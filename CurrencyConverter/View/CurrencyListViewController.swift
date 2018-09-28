@@ -71,8 +71,11 @@ extension CurrencyListViewController: UITableViewDelegate {
             cell.startEditing()
         }
 
-        guard indexPath.row > 0 else {
+        defer {
             completion(true)
+        }
+
+        guard indexPath.row > 0 else {
             return
         }
 
