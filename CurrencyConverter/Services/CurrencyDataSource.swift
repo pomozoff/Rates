@@ -20,6 +20,8 @@ protocol CurrencyList: class {
     var amount: Decimal { get set }
     var rates: CurrencyRates! { get set }
 
+    func move(from indexFrom: Int, to indexTo: Int)
+
 }
 
 final class CurrencyDataSourceImpl {
@@ -88,6 +90,12 @@ extension CurrencyDataSourceImpl: CurrencyDataSource {
 // MARK: - CurrencyList
 
 extension CurrencyDataSourceImpl: CurrencyList {
+
+    func move(from indexFrom: Int, to indexTo: Int) {
+        let currency = currencyList[indexFrom]
+        currencyList.remove(at: indexFrom)
+        currencyList.insert(currency, at: 0)
+    }
 
 }
 

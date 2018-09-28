@@ -67,7 +67,7 @@ extension CurrencyListViewController: UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath) as! CurrencyCell
 
         let completion: (Bool) -> Void = { isFinished in
-            //TODO: Update height of the table view
+            //TODO: Update height of the table content view according a keyboard height
             cell.startEditing()
         }
 
@@ -77,6 +77,8 @@ extension CurrencyListViewController: UITableViewDelegate {
         }
 
         // TODO: Animate move to top
+        presenter.moveCurrencyToTop(from: indexPath.row)
+        tableView.moveRow(at: indexPath, to: IndexPath(row: 0, section: 0))
     }
 
 }

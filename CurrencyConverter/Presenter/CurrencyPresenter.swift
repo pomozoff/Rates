@@ -11,6 +11,7 @@ import Foundation
 protocol CurrencyPresenter: class {
 
     func viewDidLoad()
+    func moveCurrencyToTop(from row: Int)
 
 }
 
@@ -41,9 +42,13 @@ final class CurrencyPresenterImpl {
 extension CurrencyPresenterImpl: CurrencyPresenter {
 
     func viewDidLoad() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(self.fetchPeriod)) { [weak self] in
-            self?.fetchCurrencyList()
-        }
+        fetchCurrencyList()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(self.fetchPeriod)) { [weak self] in
+//        }
+    }
+
+    func moveCurrencyToTop(from row: Int) {
+        dataSource.move(from: row, to: 0)
     }
 
 }
