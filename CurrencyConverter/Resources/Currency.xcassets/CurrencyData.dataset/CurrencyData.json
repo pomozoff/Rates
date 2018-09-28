@@ -1,0 +1,134 @@
+{
+  "AUD": {
+    "Country": "AUS",
+    "Name": "Australian Dollar"
+  },
+  "BGN": {
+    "Country": "BGR",
+    "Name": "Bulgarian Lev"
+  },
+  "BRL": {
+    "Country": "BRA",
+    "Name": "Brazilian Real"
+  },
+  "CAD": {
+    "Country": "CAN",
+    "Name": "Canadian Dollar"
+  },
+  "CHF": {
+    "Country": "LIE",
+    "Name": "Swiss Franc"
+  },
+  "CNY": {
+    "Country": "CHN",
+    "Name": "Yuan Renminbi"
+  },
+  "CZK": {
+    "Country": "CZE",
+    "Name": "Czech Koruna"
+  },
+  "DKK": {
+    "Country": "DNK",
+    "Name": "Danish Krone"
+  },
+  "EUR": {
+    "Country": "EUR",
+    "Name": "Euro"
+  },
+  "GBP": {
+    "Country": "GBR",
+    "Name": "Pound Sterling"
+  },
+  "HKD": {
+    "Country": "HKG",
+    "Name": "Hong Kong Dollar"
+  },
+  "HRK": {
+    "Country": "HRV",
+    "Name": "Croatian Kuna"
+  },
+  "HUF": {
+    "Country": "HUN",
+    "Name": "Forint"
+  },
+  "IDR": {
+    "Country": "IDN",
+    "Name": "Rupiah"
+  },
+  "ILS": {
+    "Country": "ISR",
+    "Name": "New Israeli Sheqel"
+  },
+  "INR": {
+    "Country": "IND",
+    "Name": "Indian Rupee"
+  },
+  "ISK": {
+    "Country": "ISL",
+    "Name": "Iceland Krona"
+  },
+  "JPY": {
+    "Country": "JPN",
+    "Name": "Yen"
+  },
+  "KRW": {
+    "Country": "KOR",
+    "Name": "Won"
+  },
+  "MXN": {
+    "Country": "MEX",
+    "Name": "Mexican Peso"
+  },
+  "MYR": {
+    "Country": "MYS",
+    "Name": "Malaysian Ringgit"
+  },
+  "NOK": {
+    "Country": "NOR",
+    "Name": "Norwegian Krone"
+  },
+  "NZD": {
+    "Country": "NZL",
+    "Name": "New Zealand Dollar"
+  },
+  "PHP": {
+    "Country": "PHL",
+    "Name": "Philippine Peso"
+  },
+  "PLN": {
+    "Country": "POL",
+    "Name": "Zloty"
+  },
+  "RON": {
+    "Country": "ROU",
+    "Name": "New Romanian Leu"
+  },
+  "RUB": {
+    "Country": "RUS",
+    "Name": "Russian Ruble"
+  },
+  "SEK": {
+    "Country": "SWE",
+    "Name": "Swedish Krona"
+  },
+  "SGD": {
+    "Country": "SGP",
+    "Name": "Singapore Dollar"
+  },
+  "THB": {
+    "Country": "THA",
+    "Name": "Baht"
+  },
+  "TRY": {
+    "Country": "TUR",
+    "Name": "Turkish Lira"
+  },
+  "USD": {
+    "Country": "USA",
+    "Name": "US Dollar"
+  },
+  "ZAR": {
+    "Country": "ZAF",
+    "Name": "Rand"
+  }
+}
