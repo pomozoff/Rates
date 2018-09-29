@@ -10,7 +10,8 @@ import UIKit
 
 protocol CurrencyListView: class {
 
-    func updateTable()
+    func reloadTable()
+    func refreshRows()
     func alert(error: Error)
 
 }
@@ -49,9 +50,10 @@ extension CurrencyListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reusableIdentifier) as! CurrencyTableViewCell
 
+        cell.presenter = presenter
         cell.amountFormatter = amountFormatter
         cell.currency = dataSource[indexPath.row]
-        
+
         return cell
     }
     
@@ -67,8 +69,12 @@ extension CurrencyListViewController: UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath) as! CurrencyCell
 
         let completion: (Bool) -> Void = { isFinished in
-            //TODO: Update height of the table content view according a keyboard height
-            cell.startEditing()
+            UIView.animate(withDuration: 0.3, animations: {
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            }, completion: { isFinished in
+                guard isFinished else { return }
+                cell.startEditing()
+            })
         }
 
         defer {
@@ -90,8 +96,16 @@ extension CurrencyListViewController: UITableViewDelegate {
 
 extension CurrencyListViewController: CurrencyListView {
 
-    func updateTable() {
+    func reloadTable() {
         tableView.reloadData()
+    }
+
+    func refreshRows() {
+        var arrayOfIndexPathes: [IndexPath] = []
+        for i in 1 ..< dataSource.count {
+            arrayOfIndexPathes.append(IndexPath(row: i, section: 0))
+        }
+        tableView.reloadRows(at: arrayOfIndexPathes, with: .none)
     }
 
     func alert(error: Error) {
@@ -104,3 +118,27 @@ extension CurrencyListViewController: CurrencyListView {
     }
 
 }
+
+/*
+// MARK: - Private
+
+private extension CurrencyListViewController {
+
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: .main) { notification in
+            guard let userInfo = notification.userInfo,
+                let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+            else {
+                return
+            }
+
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.size.width, right: keyboardFrame.size.height)
+        }
+
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification, object: nil, queue: .main) { notification in
+
+        }
+    }
+
+}
+*/

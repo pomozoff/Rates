@@ -20,7 +20,7 @@ protocol CurrencyList: class {
     var amount: Decimal { get set }
     var rates: CurrencyRates! { get set }
 
-    func move(from indexFrom: Int, to indexTo: Int)
+    func setAsNewBaseCurrency(at row: Int)
 
 }
 
@@ -91,10 +91,9 @@ extension CurrencyDataSourceImpl: CurrencyDataSource {
 
 extension CurrencyDataSourceImpl: CurrencyList {
 
-    func move(from indexFrom: Int, to indexTo: Int) {
-        let currency = currencyList[indexFrom]
-        currencyList.remove(at: indexFrom)
-        currencyList.insert(currency, at: 0)
+    func setAsNewBaseCurrency(at row: Int) {
+        baseCurrency = currencyList[row]
+        move(from: row, to: 0)
     }
 
 }
@@ -113,6 +112,12 @@ private extension CurrencyDataSourceImpl {
                                            rate: $0.rate,
                                            amount: amount(of: $0.rate),
                                            country: $0.country) }
+    }
+
+    private func move(from indexFrom: Int, to indexTo: Int) {
+        let currency = currencyList[indexFrom]
+        currencyList.remove(at: indexFrom)
+        currencyList.insert(currency, at: 0)
     }
 
 }

@@ -12,6 +12,7 @@ protocol CurrencyPresenter: class {
 
     func viewDidLoad()
     func moveCurrencyToTop(from row: Int)
+    func updateAmountOfBaseCurrency(with amount: Decimal)
 
 }
 
@@ -48,7 +49,12 @@ extension CurrencyPresenterImpl: CurrencyPresenter {
     }
 
     func moveCurrencyToTop(from row: Int) {
-        dataSource.move(from: row, to: 0)
+        dataSource.setAsNewBaseCurrency(at: row)
+    }
+
+    func updateAmountOfBaseCurrency(with amount: Decimal) {
+        dataSource.amount = amount
+        view?.refreshRows()
     }
 
 }
@@ -65,7 +71,7 @@ private extension CurrencyPresenterImpl {
             case .success(let rates):
                 DispatchQueue.main.async {
                     self?.dataSource.rates = rates
-                    self?.view?.updateTable()
+                    self?.view?.reloadTable()
                 }
             case .failure(let error):
                 DispatchQueue.main.async {

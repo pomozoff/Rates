@@ -27,6 +27,7 @@ final class CurrencyTableViewCell: UITableViewCell {
 
     // MARK: - Properties
 
+    var presenter: CurrencyPresenter!
     var amountFormatter: NumberFormatter!
     var currency: CurrencyView! {
         didSet {
@@ -37,18 +38,13 @@ final class CurrencyTableViewCell: UITableViewCell {
         }
     }
 
-    // MARK: - Life cycle
+    // MARK: - Private
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
+    private let formatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
 
 }
 
@@ -57,7 +53,37 @@ final class CurrencyTableViewCell: UITableViewCell {
 extension CurrencyTableViewCell: CurrencyCell {
 
     func startEditing() {
+        currencyAmountTextField.isUserInteractionEnabled = true
         currencyAmountTextField.becomeFirstResponder()
+        currencyAmountTextField.selectAll(nil)
+    }
+
+}
+
+// MARK: - UITextFieldDelegate
+
+extension CurrencyTableViewCell: UITextFieldDelegate {
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.isUserInteractionEnabled = false
+        if let text = textField.text, text.isEmpty {
+            textField.text = "0"
+        }
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text, let textRange = Range(range, in: text) else {
+            return true
+        }
+
+        let updatedText = text.replacingCharacters(in: textRange, with: string)
+        guard let amount = formatter.number(from: updatedText.isEmpty ? "0" : updatedText) else {
+            return false
+        }
+
+        presenter.updateAmountOfBaseCurrency(with: amount.decimalValue)
+
+        return true
     }
 
 }
