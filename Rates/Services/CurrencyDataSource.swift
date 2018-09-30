@@ -85,9 +85,7 @@ extension CurrencyDataSourceImpl: CurrencyList {
 
         sortedList.insert(baseCurrency, at: 0)
 
-        let newCurrencies = sortedList.compactMap { currencyList.contains($0) ? nil : $0 }
-
-        return updateCurrencyList(with: currencyList + newCurrencies)
+        return updateCurrencyList(with: sortedList)
     }
 
     func updateCurrencyList(with amount: Decimal) -> Changeset<[Currency]> {
