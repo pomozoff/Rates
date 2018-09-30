@@ -32,6 +32,7 @@ protocol CurrencyFetcher: class {
 
     // TODO: Update to Promises
     func fetchCurrencyList(url: URL, completion: @escaping (Result<CurrencyRates>) -> Void)
+    func fetchCurrencyListWithRandomRates(url: URL, completion: @escaping (Result<CurrencyRates>) -> Void)
 
 }
 
@@ -75,6 +76,29 @@ extension CurrencyFetcherImpl: CurrencyFetcher {
         }
         
         task.resume()
+    }
+
+    func fetchCurrencyListWithRandomRates(url: URL, completion: @escaping (Result<CurrencyRates>) -> Void) {
+        fetchCurrencyList(url: url) { result in
+            switch result {
+            case .failure(_):
+                completion(result)
+            case .success(let rateList):
+                let changedRateList: [String : Decimal] = rateList.rates.reduce(into: [:]) { result, currencyRate in
+                    var value = currencyRate.value
+
+                    defer {
+                        result[currencyRate.key] = value
+                    }
+
+                    guard arc4random_uniform(10) < 3 else { return }
+
+                    value += Decimal(Int(arc4random_uniform(100)) - 50) / 100
+                }
+                let modifiedResult = CurrencyRates(base: rateList.base, date: rateList.date, rates: changedRateList)
+                completion(.success(modifiedResult))
+            }
+        }
     }
     
 }

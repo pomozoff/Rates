@@ -63,14 +63,12 @@ extension CurrencyPresenterImpl: CurrencyPresenter {
 private extension CurrencyPresenterImpl {
 
     private func fetchCurrencyList(after: DispatchTime) {
-        let startedAt: DispatchTime = .now()
-
         DispatchQueue.main.asyncAfter(deadline: after) { [weak self] in
             guard let strongSelf = self else { return }
 
             let url = strongSelf.queryBuilder.buildFetchRatesUrl(withBaseCurrency: strongSelf.baseCurrency)
 
-            strongSelf.fetcher.fetchCurrencyList(url: url) { result in
+            strongSelf.fetcher.fetchCurrencyListWithRandomRates(url: url) { result in
                 switch result {
                 case .success(let rates):
                     DispatchQueue.main.async {
