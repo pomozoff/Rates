@@ -35,7 +35,6 @@ final class CurrencyPresenterImpl {
     // MARK: - Private
 
     private let fetchPeriod: Int
-    private var baseCurrency: Currency?
 
 }
 
@@ -66,7 +65,7 @@ private extension CurrencyPresenterImpl {
         DispatchQueue.main.asyncAfter(deadline: after) { [weak self] in
             guard let strongSelf = self else { return }
 
-            let url = strongSelf.queryBuilder.buildFetchRatesUrl(withBaseCurrency: strongSelf.baseCurrency)
+            let url = strongSelf.queryBuilder.buildFetchRatesUrl(withBaseCurrency: strongSelf.dataSource.baseCurrency)
 
             strongSelf.fetcher.fetchCurrencyListWithRandomRates(url: url) { result in
                 switch result {

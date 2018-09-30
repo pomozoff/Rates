@@ -18,6 +18,8 @@ protocol CurrencyDataSource: class {
 
 protocol CurrencyList: class {
 
+    var baseCurrency: Currency! { get }
+
     func setAsNewBaseCurrency(at row: Int)
     func updateCurrencyList(with rates: CurrencyRates) -> Changeset<[Currency]>
     func updateCurrencyList(with amount: Decimal) -> Changeset<[Currency]>
@@ -25,6 +27,10 @@ protocol CurrencyList: class {
 }
 
 final class CurrencyDataSourceImpl {
+
+    // MARK: - CurrencyList
+
+    var baseCurrency: Currency!
 
     // MARK: - Life cycle
 
@@ -38,7 +44,6 @@ final class CurrencyDataSourceImpl {
 
     private let currencyData: [String : (String, String)]
     private var currencyList: [Currency] = []
-    private var baseCurrency: Currency!
 
 }
 
