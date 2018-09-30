@@ -1,5 +1,5 @@
 //
-//  CurrencyListInitializer.swift
+//  CurrencyInitializer.swift
 //  Rates
 //
 //  Created by Anton Pomozov on 24/09/2018.
@@ -7,56 +7,36 @@
 //
 
 import UIKit
-import SwiftyJSON
 
-class CurrencyListInitializer: NSObject {
+final class CurrencyInitializer: NSObject {
 
-    @IBOutlet weak var currencyListViewController: CurrencyListViewController!
+    @IBOutlet weak var currencyViewController: CurrencyViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
-        let currencyData = loadCurrency()
-
-        let amountFormatter = NumberFormatter()
-        amountFormatter.numberStyle = .decimal
-
-        // TODO: Update to Moya
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-        let baseUrl = URL(string: "https://revolut.duckdns.org/")!
-
-        let dataSource = CurrencyDataSourceImpl(currencyData: currencyData)
-        let presenter = CurrencyPresenterImpl(fetchPeriod: 1)
-        let queryBuilder = QueryBuilderImpl(baseUrl: baseUrl)
-
-        currencyListViewController.reusableIdentifier = "CurrencyCellIdentifier"
-        currencyListViewController.presenter = presenter
-        currencyListViewController.dataSource = dataSource
-        currencyListViewController.amountFormatter = amountFormatter
-
-        presenter.view = currencyListViewController
-        presenter.dataSource = dataSource
-        presenter.fetcher = CurrencyFetcherImpl(session: session)
-        presenter.queryBuilder = queryBuilder
+        configureApplication()
     }
 
 }
 
-private extension CurrencyListInitializer {
+// MARK: - Private
 
-    private func loadCurrency() -> [String : (String, String)] {
-        guard let asset = NSDataAsset(name: "CurrencyData", bundle: Bundle.main),
-            let json = try? JSON(data: asset.data),
-            let countries = json.dictionary
-        else { return [:] }
+private extension CurrencyInitializer {
 
-        return countries.reduce(into: [:]) { result, country in
-            guard let countryCode = country.value["Country"].string else { return }
-            guard let currencyName = country.value["Name"].string else { return }
+    private func configureApplication() {
+        let amountFormatter = NumberFormatter()
+        amountFormatter.numberStyle = .decimal
 
-            result[country.key] = (countryCode, currencyName)
-        }
+        let sessionConfig = URLSessionConfiguration.default
+        let session = URLSession(configuration: sessionConfig)
+
+        let currencyConfig = CurrencyConfig(reusableIdentifier: "CurrencyCellIdentifier",
+                                            fetchPeriod: 1,
+                                            baseUrl: URL(string: "https://revolut.duckdns.org/")!,
+                                            currencyData: Currency.data,
+                                            amountFormatter: amountFormatter,
+                                            session: session)
+        CurrencyAssembler(view: currencyViewController, factory: DependenciesStorage.shared, config: currencyConfig).assemble()
     }
 
 }

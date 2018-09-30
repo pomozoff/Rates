@@ -16,7 +16,7 @@ protocol CurrencyListView: class {
 
 }
 
-class CurrencyListViewController: UIViewController {
+class CurrencyViewController: UIViewController {
 
     // MARK: - Outlets
 
@@ -41,7 +41,7 @@ class CurrencyListViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 
-extension CurrencyListViewController: UITableViewDataSource {
+extension CurrencyViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
@@ -61,7 +61,7 @@ extension CurrencyListViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 
-extension CurrencyListViewController: UITableViewDelegate {
+extension CurrencyViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -94,7 +94,7 @@ extension CurrencyListViewController: UITableViewDelegate {
 
 // MARK: - CurrencyListView
 
-extension CurrencyListViewController: CurrencyListView {
+extension CurrencyViewController: CurrencyListView {
 
     func updateCurrencyTable(with changeset: Changeset<[Currency]>) {
         tableView.update(with: changeset.edits, animation: .none)

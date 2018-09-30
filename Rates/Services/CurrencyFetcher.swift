@@ -91,9 +91,10 @@ extension CurrencyFetcherImpl: CurrencyFetcher {
                         result[currencyRate.key] = value
                     }
 
-                    guard arc4random_uniform(10) < 3 else { return }
+                    guard arc4random_uniform(10) < 2 else { return }
 
-                    value += Decimal(Int(arc4random_uniform(100)) - 50) / 100
+                    let multiplier = (Decimal(arc4random_uniform(10)) / 100) + 0.95
+                    value *= multiplier
                 }
                 let modifiedResult = CurrencyRates(base: rateList.base, date: rateList.date, rates: changedRateList)
                 completion(.success(modifiedResult))

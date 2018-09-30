@@ -28,13 +28,13 @@ final class CurrencyPresenterImpl {
 
     // MARK: - Life cycle
 
-    init(fetchPeriod: Int) {
+    init(fetchPeriod: UInt) {
         self.fetchPeriod = fetchPeriod
     }
 
     // MARK: - Private
 
-    private let fetchPeriod: Int
+    private let fetchPeriod: UInt
 
 }
 
@@ -53,6 +53,15 @@ extension CurrencyPresenterImpl: CurrencyPresenter {
     func updateAmountOfBaseCurrency(with amount: Decimal) {
         let changeset = dataSource.updateCurrencyList(with: amount)
         view?.updateCurrencyTable(with: changeset)
+    }
+
+}
+
+// MARK: - Presenter
+
+extension CurrencyPresenterImpl: Presenter {
+
+    func didFinishAssemble() {
     }
 
 }
@@ -80,7 +89,7 @@ private extension CurrencyPresenterImpl {
                     }
                 }
 
-                strongSelf.fetchCurrencyList(after: startedAt + .seconds(strongSelf.fetchPeriod))
+                strongSelf.fetchCurrencyList(after: .now() + .seconds(5))
             }
         }
     }
