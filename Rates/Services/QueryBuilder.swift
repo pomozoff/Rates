@@ -33,8 +33,19 @@ final class QueryBuilderImpl {
 extension QueryBuilderImpl: QueryBuilder {
 
     func buildFetchRatesUrl(withBaseCurrency currency: Currency? = nil) -> URL {
-        let query = "latest" + (currency == nil ? "" : "?base=\(currency!.id)")
-        return baseUrl.appendingPathComponent(query)
+        var components = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false)!
+        components.path = "/latest"
+
+        repeat {
+            guard let value = currency?.id else {
+                break
+            }
+
+            let item = URLQueryItem(name: "base", value: value)
+            components.queryItems = [item]
+        } while false
+
+        return components.url!
     }
 
 }
