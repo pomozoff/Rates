@@ -1,3 +1,4 @@
 github "mxcl/PromiseKit"
 github "Hearst-DD/ObjectMapper"
 github "SwiftyJSON/SwiftyJSON"
+github "osteslag/Changeset" "master"

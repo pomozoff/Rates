@@ -1,3 +1,4 @@
 github "Hearst-DD/ObjectMapper" "3.3.0"
 github "SwiftyJSON/SwiftyJSON" "4.2.0"
 github "mxcl/PromiseKit" "6.4.1"
+github "osteslag/Changeset" "eea7f209712b05266c5a6d749889f46d8eba9925"

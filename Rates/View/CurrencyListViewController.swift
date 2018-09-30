@@ -1,17 +1,17 @@
 //
 //  CurrencyListViewController.swift
-//  CurrencyConverter
+//  Rates
 //
 //  Created by Anton Pomozov on 24/09/2018.
 //  Copyright © 2018 Anton Pomozov. All rights reserved.
 //
 
 import UIKit
+import Changeset
 
 protocol CurrencyListView: class {
 
-    func reloadTable()
-    func refreshRows()
+    func updateCurrencyTable(with changeset: Changeset<[Currency]>)
     func alert(error: Error)
 
 }
@@ -96,16 +96,8 @@ extension CurrencyListViewController: UITableViewDelegate {
 
 extension CurrencyListViewController: CurrencyListView {
 
-    func reloadTable() {
-        tableView.reloadData()
-    }
-
-    func refreshRows() {
-        var arrayOfIndexPathes: [IndexPath] = []
-        for i in 1 ..< dataSource.count {
-            arrayOfIndexPathes.append(IndexPath(row: i, section: 0))
-        }
-        tableView.reloadRows(at: arrayOfIndexPathes, with: .none)
+    func updateCurrencyTable(with changeset: Changeset<[Currency]>) {
+        tableView.update(with: changeset.edits, animation: .none)
     }
 
     func alert(error: Error) {
@@ -118,27 +110,3 @@ extension CurrencyListViewController: CurrencyListView {
     }
 
 }
-
-/*
-// MARK: - Private
-
-private extension CurrencyListViewController {
-
-    func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: .main) { notification in
-            guard let userInfo = notification.userInfo,
-                let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
-            else {
-                return
-            }
-
-            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.size.width, right: keyboardFrame.size.height)
-        }
-
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification, object: nil, queue: .main) { notification in
-
-        }
-    }
-
-}
-*/

@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:CurrencyConverter.xcodeproj">
+      location = "self:/Users/adnako/Documents/Development/CurrencyConverter/Rates.xcodeproj">
    </FileRef>
 </Workspace>

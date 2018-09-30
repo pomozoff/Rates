@@ -1,15 +1,15 @@
 //
-//  CurrencyConverterTests.swift
-//  CurrencyConverterTests
+//  RatesTests.swift
+//  RatesTests
 //
 //  Created by Anton Pomozov on 24/09/2018.
 //  Copyright © 2018 Anton Pomozov. All rights reserved.
 //
 
 import XCTest
-@testable import CurrencyConverter
+@testable import Rates
 
-class CurrencyConverterTests: XCTestCase {
+class RatesTests: XCTestCase {
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
