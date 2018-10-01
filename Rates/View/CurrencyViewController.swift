@@ -11,12 +11,12 @@ import Changeset
 
 protocol CurrencyListView: class {
 
-    func updateCurrencyTable(with changeset: Changeset<[Currency]>)
+    func updateTable(with changeset: Changeset<[Currency]>)
     func alert(error: Error)
 
 }
 
-class CurrencyViewController: UIViewController {
+final class CurrencyViewController: UIViewController {
 
     // MARK: - Outlets
 
@@ -26,7 +26,7 @@ class CurrencyViewController: UIViewController {
 
     var reusableIdentifier: String!
     var presenter: CurrencyPresenter!
-    var dataSource: CurrencyDataSourceImpl!
+    var dataSource: CurrencyDataSource!
     var amountFormatter: NumberFormatter!
 
     // MARK: - Life cycle
@@ -96,7 +96,7 @@ extension CurrencyViewController: UITableViewDelegate {
 
 extension CurrencyViewController: CurrencyListView {
 
-    func updateCurrencyTable(with changeset: Changeset<[Currency]>) {
+    func updateTable(with changeset: Changeset<[Currency]>) {
         tableView.update(with: changeset.edits, animation: .none)
     }
 

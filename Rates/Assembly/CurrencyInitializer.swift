@@ -10,7 +10,11 @@ import UIKit
 
 final class CurrencyInitializer: NSObject {
 
+    // MARK: - Outlets
+
     @IBOutlet weak var currencyViewController: CurrencyViewController!
+
+    // MARK: - Life cycle
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,12 +35,14 @@ private extension CurrencyInitializer {
         let session = URLSession(configuration: sessionConfig)
 
         let currencyConfig = CurrencyConfig(reusableIdentifier: "CurrencyCellIdentifier",
-                                            fetchPeriod: 1,
+                                            fetchPeriod: 5,
                                             baseUrl: URL(string: "https://revolut.duckdns.org/")!,
                                             currencyData: Currency.data,
                                             amountFormatter: amountFormatter,
                                             session: session)
-        CurrencyAssembler(view: currencyViewController, factory: DependenciesStorage.shared, config: currencyConfig).assemble()
+        CurrencyAssembler(view: currencyViewController,
+                          resolver: CurrencyResolver(factory: DependenciesStorage.shared, config: currencyConfig),
+                          config: currencyConfig).assemble()
     }
 
 }

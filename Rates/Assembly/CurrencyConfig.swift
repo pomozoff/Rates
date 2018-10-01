@@ -11,7 +11,7 @@ import Foundation
 struct CurrencyConfig {
 
     let reusableIdentifier: String
-    let fetchPeriod: UInt
+    let fetchPeriod: Int?
     let baseUrl: URL
     let currencyData: CurrencyData
     let amountFormatter: NumberFormatter

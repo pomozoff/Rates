@@ -14,16 +14,16 @@ final class CurrencyAssembler {
 
     // MARK: - Life cycle
 
-    init(view: CurrencyViewController, factory: DependenciesFactory, config: CurrencyConfig) {
+    init(view: CurrencyViewController, resolver: Resolver, config: CurrencyConfig) {
         self.view = view
-        self.factory = factory
+        self.resolver = resolver
         self.config = config
     }
 
     // MARK: - Private
 
     private let view: CurrencyViewController
-    private let factory: DependenciesFactory
+    private let resolver: Resolver
     private let config: CurrencyConfig
 
 }
@@ -35,32 +35,18 @@ extension CurrencyAssembler: Assembler {
     func assemble() {
         view.reusableIdentifier = config.reusableIdentifier
         view.amountFormatter = config.amountFormatter
-        view.presenter = resolve() as CurrencyPresenterImpl
-        view.dataSource = resolve() as CurrencyDataSourceImpl
+        view.presenter = resolver.resolve()
+        view.dataSource = resolver.resolve()
 
-        let presenter = resolve() as CurrencyPresenterImpl
+        let presenter = resolver.resolve() as CurrencyPresenterImpl
 
         presenter.view = view
-        presenter.dataSource = resolve() as CurrencyDataSourceImpl
-        presenter.fetcher = resolve() as CurrencyFetcherImpl
-        presenter.queryBuilder = resolve() as QueryBuilderImpl
+        presenter.dataSource = resolver.resolve()
+        presenter.fetcher = resolver.resolve()
+        presenter.queryBuilder = resolver.resolve()
+        presenter.queueRunner = resolver.resolve()
 
         presenter.didFinishAssemble()
-    }
-
-    func resolve<T>() -> T where T: AnyObject {
-        switch T.self {
-        case is CurrencyPresenterImpl.Type:
-            return factory.resolveObject { return CurrencyPresenterImpl(fetchPeriod: config.fetchPeriod) } as! T
-        case is CurrencyDataSourceImpl.Type:
-            return factory.resolveObject { return CurrencyDataSourceImpl(currencyData: config.currencyData) } as! T
-        case is QueryBuilderImpl.Type:
-            return factory.resolveObject { return QueryBuilderImpl(baseUrl: config.baseUrl) } as! T
-        case is CurrencyFetcherImpl.Type:
-            return factory.resolveObject { return CurrencyFetcherImpl(session: config.session) } as! T
-        default:
-            fatalError("Invalid type sent: \(T.self)")
-        }
     }
 
 }

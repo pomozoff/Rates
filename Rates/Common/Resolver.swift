@@ -1,5 +1,5 @@
 //
-//  Assembler.swift
+//  Resolver.swift
 //  Rates
 //
 //  Created by Anton Pomozov on 30/09/2018.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-protocol Assembler: class {
+protocol Resolver: class {
 
-    func assemble()
+    func resolve<T>() -> T where T: Any
 
 }

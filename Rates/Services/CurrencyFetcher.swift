@@ -8,31 +8,10 @@
 
 import Foundation
 
-enum NetworkError {
-
-    var domain: String {
-        return "network"
-    }
-
-    case emptyData(String)
-    case decoding(String)
-
-    var error: NSError {
-        switch self {
-        case .emptyData(let description):
-            return NSError.create(withCode: -1, localDomain: domain, description: "Data is empty. \(description)")
-        case .decoding(let description):
-            return NSError.create(withCode: -2, localDomain: domain, description: "Failed to convert data. \(description)")
-        }
-    }
-
-}
-
 protocol CurrencyFetcher: class {
 
     // TODO: Update to Promises
     func fetchCurrencyList(url: URL, completion: @escaping (Result<CurrencyRates>) -> Void)
-    func fetchCurrencyListWithRandomRates(url: URL, completion: @escaping (Result<CurrencyRates>) -> Void)
 
 }
 
@@ -64,11 +43,11 @@ extension CurrencyFetcherImpl: CurrencyFetcher {
                 return
             }
             guard let data = data else {
-                completion(.failure(NetworkError.emptyData("Response: \(String(describing: response))").error))
+                completion(.failure(NetworkError.emptyData("Data is empty: \(String(describing: response))").error))
                 return
             }
             guard let rates = try? JSONDecoder().decode(CurrencyRates.self, from: data) else {
-                completion(.failure(NetworkError.decoding("Data: \(data)").error))
+                completion(.failure(NetworkError.decoding("Failed to parse data: \(data)").error))
                 return
             }
 
@@ -76,30 +55,6 @@ extension CurrencyFetcherImpl: CurrencyFetcher {
         }
         
         task.resume()
-    }
-
-    func fetchCurrencyListWithRandomRates(url: URL, completion: @escaping (Result<CurrencyRates>) -> Void) {
-        fetchCurrencyList(url: url) { result in
-            switch result {
-            case .failure(_):
-                completion(result)
-            case .success(let rateList):
-                let changedRateList: [String : Decimal] = rateList.rates.reduce(into: [:]) { result, currencyRate in
-                    var value = currencyRate.value
-
-                    defer {
-                        result[currencyRate.key] = value
-                    }
-
-                    guard arc4random_uniform(10) < 2 else { return }
-
-                    let multiplier = (Decimal(arc4random_uniform(10)) / 100) + 0.95
-                    value *= multiplier
-                }
-                let modifiedResult = CurrencyRates(base: rateList.base, date: rateList.date, rates: changedRateList)
-                completion(.success(modifiedResult))
-            }
-        }
     }
     
 }

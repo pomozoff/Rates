@@ -25,16 +25,17 @@ final class CurrencyPresenterImpl {
     var dataSource: CurrencyList!
     var fetcher: CurrencyFetcher!
     var queryBuilder: QueryBuilder!
+    var queueRunner: QueueRunner!
 
     // MARK: - Life cycle
 
-    init(fetchPeriod: UInt) {
+    init(fetchPeriod: Int? = nil) {
         self.fetchPeriod = fetchPeriod
     }
 
     // MARK: - Private
 
-    private let fetchPeriod: UInt
+    private let fetchPeriod: Int?
 
 }
 
@@ -52,7 +53,7 @@ extension CurrencyPresenterImpl: CurrencyPresenter {
 
     func updateAmountOfBaseCurrency(with amount: Decimal) {
         let changeset = dataSource.updateCurrencyList(with: amount)
-        view?.updateCurrencyTable(with: changeset)
+        view?.updateTable(with: changeset)
     }
 
 }
@@ -71,25 +72,26 @@ extension CurrencyPresenterImpl: Presenter {
 private extension CurrencyPresenterImpl {
 
     private func fetchCurrencyList(after: DispatchTime) {
-        DispatchQueue.main.asyncAfter(deadline: after) { [weak self] in
+        queueRunner.runOnMain(deadline: after) { [weak self] in
             guard let strongSelf = self else { return }
 
             let url = strongSelf.queryBuilder.buildFetchRatesUrl(withBaseCurrency: strongSelf.dataSource.baseCurrency)
 
-            strongSelf.fetcher.fetchCurrencyListWithRandomRates(url: url) { result in
+            strongSelf.fetcher.fetchCurrencyList(url: url) { result in
                 switch result {
                 case .success(let rates):
-                    DispatchQueue.main.async {
+                    strongSelf.queueRunner.runOnMain {
                         let changeset = strongSelf.dataSource.updateCurrencyList(with: rates)
-                        strongSelf.view?.updateCurrencyTable(with: changeset)
+                        strongSelf.view?.updateTable(with: changeset)
                     }
                 case .failure(let error):
-                    DispatchQueue.main.async {
+                    strongSelf.queueRunner.runOnMain {
                         strongSelf.view?.alert(error: error)
                     }
                 }
 
-                strongSelf.fetchCurrencyList(after: .now() + .seconds(5))
+                guard let fetchPeriod = strongSelf.fetchPeriod else { return }
+                strongSelf.fetchCurrencyList(after: .now() + .seconds(fetchPeriod))
             }
         }
     }

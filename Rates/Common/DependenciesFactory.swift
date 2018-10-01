@@ -8,27 +8,6 @@
 
 import Foundation
 
-final class ObjectKey: NSObject {
-
-    let type: AnyObject.Type
-    let tag: String
-
-    init(type: AnyObject.Type) {
-        self.type = type
-        self.tag = ""
-    }
-
-    override var hash: Int {
-        return String(describing: type).hashValue ^ tag.hashValue
-    }
-
-    override func isEqual(_ object: Any?) -> Bool {
-        guard let object = object as? ObjectKey else { return false }
-        return type == object.type && tag == object.tag
-    }
-
-}
-
 protocol DependenciesFactory: class {
 
     func resolveObject<T>(builder: () -> T) -> T where T: AnyObject
@@ -37,11 +16,21 @@ protocol DependenciesFactory: class {
 
 final class DependenciesStorage {
 
+    // MARK: - Public
+
     static let shared = DependenciesStorage()
+
+    func flush() {
+        singletones.removeAllObjects()
+    }
+
+    // MARK: - Private
 
     private let singletones = NSMapTable<NSString, AnyObject>(keyOptions: .strongMemory, valueOptions: .weakMemory)
 
 }
+
+// MARK: - DependenciesFactory
 
 extension DependenciesStorage: DependenciesFactory {
 
