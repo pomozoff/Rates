@@ -30,7 +30,7 @@ final class CurrencyDataSourceImpl {
 
     // MARK: - CurrencyList
 
-    var baseCurrency: Currency!
+    private(set) var baseCurrency: Currency!
 
     // MARK: - Life cycle
 
