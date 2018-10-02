@@ -20,7 +20,7 @@ final class CurrencyViewController: UIViewController {
 
     // MARK: - Outlets
 
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView?
 
     // MARK: - Properties
 
@@ -97,7 +97,7 @@ extension CurrencyViewController: UITableViewDelegate {
 extension CurrencyViewController: CurrencyListView {
 
     func updateTable(with changeset: Changeset<[Currency]>) {
-        tableView.update(with: changeset.edits, animation: .none)
+        tableView?.update(with: changeset.edits, animation: .none)
     }
 
     func alert(error: Error) {

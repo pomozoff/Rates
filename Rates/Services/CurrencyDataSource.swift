@@ -40,7 +40,9 @@ final class CurrencyDataSourceImpl {
 
     // MARK: - Private
 
-    private let currencyComparator: (Currency, Currency) -> Bool = { $0.amount == $1.amount }
+    private let currencyComparator: (Currency, Currency) -> Bool = {
+        $0.id == $1.id && $0.rate == $1.rate
+    }
 
     private let currencyData: [String : (String, String)]
     private var currencyList: [Currency] = []
@@ -84,7 +86,7 @@ extension CurrencyDataSourceImpl: CurrencyList {
             .map({ Currency(id: $0.key,
                             name: currencyData[$0.key]?.1 ?? "",
                             rate: $0.value,
-                            amount: calcAmount(withCurrentRate: $0.value),
+                            amount: $0.value * baseCurrency.amount,
                             country: currencyData[$0.key]?.0 ?? "") })
             .sorted(by: { $0.id < $1.id })
 
@@ -100,7 +102,7 @@ extension CurrencyDataSourceImpl: CurrencyList {
             return Currency(id: currency.id,
                             name: currency.name,
                             rate: currency.rate,
-                            amount: calcAmount(withCurrentRate: currency.rate),
+                            amount: currency.rate * baseCurrency.amount,
                             country: currency.country)
         }
         return updateCurrencyList(with: newCurrencyList)
@@ -111,10 +113,6 @@ extension CurrencyDataSourceImpl: CurrencyList {
 // MARK: - Private
 
 private extension CurrencyDataSourceImpl {
-
-    private func calcAmount(withCurrentRate rate: Decimal) -> Decimal {
-        return rate * baseCurrency.amount / baseCurrency.rate
-    }
 
     private func move(from indexFrom: Int, to indexTo: Int) {
         let currency = currencyList[indexFrom]

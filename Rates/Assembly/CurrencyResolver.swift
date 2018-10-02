@@ -32,7 +32,7 @@ class CurrencyResolver: Resolver {
         } else if T.self == QueryBuilder?.self {
             return factory.resolveObject { return QueryBuilderImpl(baseUrl: config.baseUrl) } as! T
         } else if T.self == CurrencyFetcher?.self {
-            return factory.resolveObject { return RandomizeCurrencyFetcher(currencyFetcher: resolve() as CurrencyFetcherImpl) } as! T
+            return factory.resolveObject { return CurrencyFetcherImpl(session: config.session) } as! T
         } else if T.self == CurrencyFetcherImpl.self {
             return factory.resolveObject { return CurrencyFetcherImpl(session: config.session) } as! T
         } else if T.self == QueueRunner?.self {

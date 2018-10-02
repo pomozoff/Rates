@@ -6,8 +6,7 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "CurrencyRatesUpdateBaseUSD.json",
-      "universal-type-identifier" : "public.json"
+      "filename" : "CurrencyRatesInitBaseBRL.json"
     }
   ]
 }

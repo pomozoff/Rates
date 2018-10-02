@@ -21,3 +21,14 @@ struct CurrencyRates: Decodable {
     }
 
 }
+
+// MARK: - Public
+
+extension CurrencyRates {
+
+    var debugDescription: String {
+        let content = rates.map { "Currency: '\($0.key)' - Rate: '\($0.value)'" }
+        return "<\(type(of: self))>: Base = '\(base)', date = '\(date)'\n\(content.joined(separator: "\n"))"
+    }
+
+}

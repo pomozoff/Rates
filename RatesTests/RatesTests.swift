@@ -52,6 +52,34 @@ class RatesTests: XCTestCase {
         XCTAssert(changes.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
     }
 
+    func testLoadUpdatedRates() {
+        // Load initial rates
+        let viewMock = createMockedViewController()
+        viewMock.viewDidLoad()
+
+        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
+
+        // FIXME: XCTAssertNil crashes here
+        XCTAssert(viewMock.updatedChangeset != nil, "Changest to update table is nil")
+
+        let presenter = currencyViewController.presenter as! CurrencyPresenterImpl
+        let loadChanges = viewMock.updatedChangeset!
+        let fetcher = presenter.fetcher as! CurrencyFetcherMock
+
+        XCTAssert(loadChanges.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
+
+        // Load updated rates
+        // There should be only 3 changes comparing to CurrencyRatesInitBaseEUR
+        let expectedNumberOfChanges = 3
+        fetcher.assetName = "CurrencyRatesUpdateBaseEUR"
+        presenter.viewDidLoad()
+
+        let updateChanges = viewMock.updatedChangeset!
+
+        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
+        XCTAssert(updateChanges.edits.count == expectedNumberOfChanges, "Invalid number of modified rates")
+    }
+
     func testChangeBaseCurrency() {
         // Load initial rates
         let viewMock = createMockedViewController()
@@ -63,17 +91,21 @@ class RatesTests: XCTestCase {
         XCTAssert(viewMock.updatedChangeset != nil, "Changest to update table is nil")
 
         let presenter = currencyViewController.presenter as! CurrencyPresenterImpl
-        let changes = viewMock.updatedChangeset!
+        let loadChanges = viewMock.updatedChangeset!
         let fetcher = presenter.fetcher as! CurrencyFetcherMock
 
-        XCTAssert(changes.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
+        XCTAssert(loadChanges.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
 
-        // Load updated rates
-        fetcher.assetName = "CurrencyRatesUpdateBaseEUR"
+        // Change base currency EUR -> BRL
+        // There should be only 2 changes (one insertion and one deletion) comparing to CurrencyRatesInitBaseEUR
+        let expectedNumberOfChanges = 2
+        fetcher.assetName = "CurrencyRatesInitBaseBRL"
         presenter.viewDidLoad()
 
+        let baseChanges = viewMock.updatedChangeset!
+
         XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-        XCTAssert(changes.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
+        XCTAssert(baseChanges.edits.count == expectedNumberOfChanges, "Invalid number of modified rates")
     }
 
     // MARK: - Private

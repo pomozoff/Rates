@@ -35,7 +35,7 @@ private extension CurrencyInitializer {
         let session = URLSession(configuration: sessionConfig)
 
         let currencyConfig = CurrencyConfig(reusableIdentifier: "CurrencyCellIdentifier",
-                                            fetchPeriod: 5,
+                                            fetchPeriod: 1,
                                             baseUrl: URL(string: "https://revolut.duckdns.org/")!,
                                             currencyData: Currency.data,
                                             amountFormatter: amountFormatter,

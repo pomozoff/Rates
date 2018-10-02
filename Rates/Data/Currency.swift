@@ -42,3 +42,13 @@ extension Currency: Equatable {
     }
 
 }
+
+// MARK: - Public
+
+extension Currency {
+
+    var debugDescription: String {
+        return "<\(type(of: self))>: ID =\(id)), rate = \(rate), amount = \(amount)"
+    }
+
+}
