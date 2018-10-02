@@ -86,7 +86,7 @@ extension CurrencyViewController: UITableViewDelegate {
         }
 
         // TODO: Animate move to top
-        presenter.moveCurrencyToTop(from: indexPath.row)
+        presenter.moveCurrencyToTop(fromRow: indexPath.row)
         tableView.moveRow(at: indexPath, to: IndexPath(row: 0, section: 0))
     }
 

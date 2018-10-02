@@ -12,7 +12,7 @@ import Changeset
 protocol CurrencyPresenter: class {
 
     func viewDidLoad()
-    func moveCurrencyToTop(from row: Int)
+    func moveCurrencyToTop(fromRow row: Int)
     func updateAmountOfBaseCurrency(with amount: Decimal)
 
 }
@@ -47,7 +47,7 @@ extension CurrencyPresenterImpl: CurrencyPresenter {
         fetchCurrencyList(after: .now())
     }
 
-    func moveCurrencyToTop(from row: Int) {
+    func moveCurrencyToTop(fromRow row: Int) {
         dataSource.setAsNewBaseCurrency(at: row)
     }
 
