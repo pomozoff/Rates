@@ -30,9 +30,7 @@ class RatesTests: XCTestCase {
     }
 
     func testLoadInitialRates() {
-        let resolver = CurrencyResolverMock(factory: DependenciesStorage.shared, config: config, assetName: "CurrencyRatesInitBaseEUR")
-        XCTAssertNotNil(resolver, "Currency resolver mock is nil")
-
+        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
         assembleModule(using: resolver)
 
         viewMock.viewDidLoad()
@@ -43,9 +41,7 @@ class RatesTests: XCTestCase {
     }
 
     func testUpdateInitialRates() {
-        let resolver = CurrencyResolverMock(factory: DependenciesStorage.shared, config: config, assetName: "CurrencyRatesInitBaseEUR")
-        XCTAssertNotNil(resolver, "Currency resolver mock is nil")
-
+        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
         assembleModule(using: resolver)
 
         viewMock.viewDidLoad()
@@ -58,6 +54,10 @@ class RatesTests: XCTestCase {
 
         let expectedNumberOfUpdatedRows = 3
         XCTAssert(viewMock.changeset!.edits.count == expectedNumberOfUpdatedRows, "Invalid number of updated rows")
+    }
+
+    func testMoveCurrencyToTop() {
+
     }
 
     // MARK: - Private
@@ -93,6 +93,13 @@ private extension RatesTests {
         XCTAssertNotNil(viewMock.presenter, "Presenter is nil")
         XCTAssertNotNil(viewMock.dataSource, "Data source is nil")
         XCTAssertNotNil(viewMock.amountFormatter, "Amount formatter is nil")
+    }
+
+    private func createResolverMock(with asset: String) -> CurrencyResolverMock {
+        let resolver = CurrencyResolverMock(factory: DependenciesStorage.shared, config: config, assetName: "CurrencyRatesInitBaseEUR")
+        XCTAssertNotNil(resolver, "Currency resolver mock is nil")
+
+        return resolver
     }
 
 }
