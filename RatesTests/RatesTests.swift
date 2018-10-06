@@ -38,6 +38,7 @@ class RatesTests: XCTestCase {
 
         let expectedNumberOfLoadedRows = 5
         XCTAssert(viewMock.changeset!.edits.count == expectedNumberOfLoadedRows, "Invalid number of loaded rows")
+        XCTAssert(viewMock.dataSource.count == viewMock.changeset!.edits.count, "Invalid number of changed rows")
     }
 
     func testUpdateInitialRates() {
@@ -56,8 +57,27 @@ class RatesTests: XCTestCase {
         XCTAssert(viewMock.changeset!.edits.count == expectedNumberOfUpdatedRows, "Invalid number of updated rows")
     }
 
-    func testMoveCurrencyToTop() {
+    func testSetNewBaseCurrency() {
+        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
+        assembleModule(using: resolver)
 
+        viewMock.viewDidLoad()
+        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
+
+        let rowFrom = 3
+        viewMock.presenter.moveCurrencyToTop(fromRow: rowFrom, completion: {})
+
+        let expectedNumberOfUpdatedRows = 1
+        let edits = viewMock.changeset!.edits
+        XCTAssert(edits.count == expectedNumberOfUpdatedRows, "Invalid number of updated rows")
+
+        let firstEdit = edits.first!
+        if case .move(let origin) = firstEdit.operation {
+            XCTAssert(origin == rowFrom, "Invalid number of updated rows")
+            XCTAssert(firstEdit.destination == 0, "Invalid number of updated rows")
+        } else {
+            XCTFail("Invalid operation")
+        }
     }
 
     // MARK: - Private
