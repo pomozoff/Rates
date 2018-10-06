@@ -12,7 +12,7 @@ import Changeset
 protocol CurrencyPresenter: class {
 
     func viewDidLoad()
-    func moveCurrencyToTop(fromRow row: Int)
+    func moveCurrencyToTop(fromRow row: Int, completion: @escaping () -> Void)
     func updateAmountOfBaseCurrency(with amount: Decimal)
 
 }
@@ -47,13 +47,14 @@ extension CurrencyPresenterImpl: CurrencyPresenter {
         fetchCurrencyList(after: .now())
     }
 
-    func moveCurrencyToTop(fromRow row: Int) {
-        dataSource.setAsNewBaseCurrency(at: row)
+    func moveCurrencyToTop(fromRow row: Int, completion: @escaping () -> Void) {
+        let changeset = dataSource.setAsNewBaseCurrency(at: row)
+        view?.updateTable(with: changeset, animation: true, completion: completion)
     }
 
     func updateAmountOfBaseCurrency(with amount: Decimal) {
         let changeset = dataSource.updateCurrencyList(with: amount)
-        view?.updateTable(with: changeset)
+        view?.updateTable(with: changeset, animation: false, completion: nil)
     }
 
 }
@@ -82,7 +83,7 @@ private extension CurrencyPresenterImpl {
                 case .success(let rates):
                     strongSelf.queueRunner.runOnMain {
                         let changeset = strongSelf.dataSource.updateCurrencyList(with: rates)
-                        strongSelf.view?.updateTable(with: changeset)
+                        strongSelf.view?.updateTable(with: changeset, animation: false, completion: nil)
                     }
                 case .failure(let error):
                     strongSelf.queueRunner.runOnMain {

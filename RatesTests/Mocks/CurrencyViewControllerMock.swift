@@ -19,7 +19,7 @@ final class CurrencyViewControllerMock: CurrencyViewController {
 
     // MARK: - CurrencyListView
 
-    override func updateTable(with changeset: Changeset<[Currency]>) {
+    override func updateTable(with changeset: Changeset<[Currency]>, animation: Bool, completion: (() -> Void)?) {
         self.changeset = changeset
     }
 

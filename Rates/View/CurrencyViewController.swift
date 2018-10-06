@@ -11,7 +11,7 @@ import Changeset
 
 protocol CurrencyListView: class {
 
-    func updateTable(with changeset: Changeset<[Currency]>)
+    func updateTable(with changeset: Changeset<[Currency]>, animation: Bool, completion: (() -> Void)?)
     func alert(error: Error)
 
 }
@@ -39,8 +39,9 @@ class CurrencyViewController: UIViewController, CurrencyListView {
 
     // MARK: - CurrencyListView
 
-    func updateTable(with changeset: Changeset<[Currency]>) {
-        tableView?.update(with: changeset.edits, animation: .none)
+    func updateTable(with changeset: Changeset<[Currency]>, animation: Bool, completion: (() -> Void)?) {
+        tableView?.update(with: changeset.edits, animation: animation ? .automatic : .none)
+        completion?()
     }
 
     func alert(error: Error) {
@@ -81,28 +82,23 @@ extension CurrencyViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        let cell = tableView.cellForRow(at: indexPath) as! CurrencyCell
-
-        let completion: (Bool) -> Void = { isFinished in
+        let completion: () -> Void = {
             UIView.animate(withDuration: 0.3, animations: {
                 tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
             }, completion: { isFinished in
                 guard isFinished else { return }
+
+                let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! CurrencyCell
                 cell.startEditing()
             })
         }
 
-        defer {
-            completion(true)
-        }
-
         guard indexPath.row > 0 else {
+            completion()
             return
         }
 
-        // TODO: Animate move to top
-        presenter.moveCurrencyToTop(fromRow: indexPath.row)
-        tableView.moveRow(at: indexPath, to: IndexPath(row: 0, section: 0))
+        presenter.moveCurrencyToTop(fromRow: indexPath.row, completion: completion)
     }
 
 }
