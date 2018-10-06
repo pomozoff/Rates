@@ -11,9 +11,22 @@ import Foundation
 
 final class CurrencyResolverMock: CurrencyResolver {
 
+    // MARK: - Properties
+
+    var assetName: String
+
+    // MARK: - Life cycle
+
+    required init(factory: DependenciesFactory, config: CurrencyConfig, assetName: String) {
+        self.assetName = assetName
+        super.init(factory: factory, config: config)
+    }
+
+    // MARK: - CurrencyResolver
+
     override func resolve<T>() -> T where T: Any {
         if T.self == CurrencyFetcher?.self {
-            return factory.resolveObject { return CurrencyFetcherMock(assetName: "CurrencyRatesInitBaseEUR") } as! T
+            return CurrencyFetcherMock(assetName: assetName) as! T
         } else if T.self == QueueRunner?.self {
             return factory.resolveObject { return QueueRunnerMock() } as! T
         } else {

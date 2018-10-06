@@ -16,7 +16,7 @@ protocol CurrencyListView: class {
 
 }
 
-final class CurrencyViewController: UIViewController {
+class CurrencyViewController: UIViewController, CurrencyListView {
 
     // MARK: - Outlets
 
@@ -35,6 +35,21 @@ final class CurrencyViewController: UIViewController {
         super.viewDidLoad()
 
         presenter.viewDidLoad()
+    }
+
+    // MARK: - CurrencyListView
+
+    func updateTable(with changeset: Changeset<[Currency]>) {
+        tableView?.update(with: changeset.edits, animation: .none)
+    }
+
+    func alert(error: Error) {
+        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+
+        let actionOk = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(actionOk)
+
+        present(alertController, animated: true, completion: nil)
     }
 
 }
@@ -88,25 +103,6 @@ extension CurrencyViewController: UITableViewDelegate {
         // TODO: Animate move to top
         presenter.moveCurrencyToTop(fromRow: indexPath.row)
         tableView.moveRow(at: indexPath, to: IndexPath(row: 0, section: 0))
-    }
-
-}
-
-// MARK: - CurrencyListView
-
-extension CurrencyViewController: CurrencyListView {
-
-    func updateTable(with changeset: Changeset<[Currency]>) {
-        tableView?.update(with: changeset.edits, animation: .none)
-    }
-
-    func alert(error: Error) {
-        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-
-        let actionOk = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(actionOk)
-
-        present(alertController, animated: true, completion: nil)
     }
 
 }

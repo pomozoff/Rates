@@ -12,11 +12,8 @@ import XCTest
 class RatesTests: XCTestCase {
 
     override func setUp() {
-        view = CurrencyViewController()
-        XCTAssertNotNil(view, "View is nil")
-
-        currencyResolver = CurrencyResolver(factory: DependenciesStorage.shared, config: currencyConfig)
-        XCTAssertNotNil(currencyResolver, "Currency resolver is nil")
+        viewMock = CurrencyViewControllerMock()
+        XCTAssertNotNil(viewMock, "View mock is nil")
 
         DependenciesStorage.shared.flush()
     }
@@ -26,103 +23,48 @@ class RatesTests: XCTestCase {
     }
 
     func testAssembly() {
-        CurrencyAssembler(view: view,
-                          resolver: currencyResolver,
-                          config: currencyConfig).assemble()
+        let resolver = CurrencyResolver(factory: DependenciesStorage.shared, config: config)
+        XCTAssertNotNil(resolver, "Currency resolver is nil")
 
-        XCTAssert(view.reusableIdentifier == "CurrencyCellIdentifier", "Invalid reuse identifier")
-        XCTAssertNotNil(view.presenter, "Presenter is nil")
-        XCTAssertNotNil(view.dataSource, "Data source is nil")
-        XCTAssertNotNil(view.amountFormatter, "Amount formatter is nil")
+        assembleModule(using: resolver)
     }
 
-    func testLoadUpdatedRates() {
-        fetchInitialRateList()
+    func testLoadInitialRates() {
+        let resolver = CurrencyResolverMock(factory: DependenciesStorage.shared, config: config, assetName: "CurrencyRatesInitBaseEUR")
+        XCTAssertNotNil(resolver, "Currency resolver mock is nil")
 
-        let presenter = getPresenter(from: view)
-        let updatedChanges = viewMock.updatedChangeset!
-        let fetcher = getFetcherMock(from: presenter)
+        assembleModule(using: resolver)
 
-        XCTAssert(updatedChanges.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
-
-        // Load updated rates
-        // There should be only 3 changes comparing to CurrencyRatesInitBaseEUR
-        let expectedNumberOfChanges = 3
-        fetcher.assetName = "CurrencyRatesUpdateBaseEUR"
-        presenter.viewDidLoad()
-
-        let updateChanges = viewMock.updatedChangeset!
-
+        viewMock.viewDidLoad()
         XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-        XCTAssert(updateChanges.edits.count == expectedNumberOfChanges, "Invalid number of modified rates")
+
+        let expectedNumberOfLoadedRows = 5
+        XCTAssert(viewMock.changeset!.edits.count == expectedNumberOfLoadedRows, "Invalid number of loaded rows")
     }
 
-    func testMoveCurrencyToTop() {
-        fetchInitialRateList()
+    func testUpdateInitialRates() {
+        let resolver = CurrencyResolverMock(factory: DependenciesStorage.shared, config: config, assetName: "CurrencyRatesInitBaseEUR")
+        XCTAssertNotNil(resolver, "Currency resolver mock is nil")
 
-        let presenter = getPresenter(from: view)
-        let updatedChanges = viewMock.updatedChangeset!
-        let fetcher = getFetcherMock(from: presenter)
+        assembleModule(using: resolver)
 
-        XCTAssert(updatedChanges.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
+        viewMock.viewDidLoad()
 
-        let dataSource = getDataSource(from: presenter)
-        let currencyOnThirdRow = dataSource[2] as! Currency
-        presenter.moveCurrencyToTop(fromRow: 2)
-        let currencyOnTop = dataSource[0] as! Currency
+        resolver.assetName = "CurrencyRatesUpdateBaseEUR"
+        assembleModule(using: resolver)
 
-        XCTAssert(currencyOnThirdRow == currencyOnTop, "Failed to move on top")
-    }
-
-    func testChangeBaseCurrency() {
-        fetchInitialRateList()
-
-        let presenter = getPresenter(from: view)
-        let updatedChanges = viewMock.updatedChangeset!
-        let fetcher = getFetcherMock(from: presenter)
-
-        XCTAssert(updatedChanges.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
-
-        // Change base currency EUR -> BRL
-        // There should be only 2 changes (one insertion and one deletion) comparing to CurrencyRatesInitBaseEUR
-        let expectedNumberOfChanges = 2
-        fetcher.assetName = "CurrencyRatesInitBaseBRL"
-        presenter.viewDidLoad()
-
-        let baseChanges = viewMock.updatedChangeset!
-
+        viewMock.viewDidLoad()
         XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-        XCTAssert(baseChanges.edits.count == expectedNumberOfChanges, "Invalid number of modified rates")
-    }
 
-    func testBaseCurrencyWasChanged() {
-        fetchInitialRateList()
-
-        let presenter = getPresenter(from: view)
-        let updatedChanges = viewMock.updatedChangeset!
-        let fetcher = getFetcherMock(from: presenter)
-
-        XCTAssert(updatedChanges.edits.count == fetcher.numberOfLoadedRates, "Invalid number of loaded rates")
-
-        // Change base currency EUR -> BRL
-        // There should be only 2 changes (one insertion and one deletion) comparing to CurrencyRatesInitBaseEUR
-        let expectedNumberOfChanges = 2
-        fetcher.assetName = "CurrencyRatesInitBaseBRL"
-        presenter.viewDidLoad()
-
-        let baseChanges = viewMock.updatedChangeset!
-
-        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-        XCTAssert(baseChanges.edits.count == expectedNumberOfChanges, "Invalid number of modified rates")
+        let expectedNumberOfUpdatedRows = 3
+        XCTAssert(viewMock.changeset!.edits.count == expectedNumberOfUpdatedRows, "Invalid number of updated rows")
     }
 
     // MARK: - Private
 
     private var viewMock: CurrencyViewControllerMock!
-    private var view: CurrencyViewController!
-    private var currencyResolver: CurrencyResolver!
 
-    private var currencyConfig: CurrencyConfig = {
+    private var config: CurrencyConfig = {
         let amountFormatter = NumberFormatter()
         amountFormatter.numberStyle = .decimal
 
@@ -143,39 +85,14 @@ class RatesTests: XCTestCase {
 
 private extension RatesTests {
 
-    private func fetchInitialRateList() {
-        // Load initial rates
-        viewMock = createMockedViewController()
-        viewMock.viewDidLoad()
-
-        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-
-        // FIXME: XCTAssertNil crashes here
-        XCTAssert(viewMock.updatedChangeset != nil, "Changest to update table is nil")
-    }
-
-    private func getPresenter(from view: CurrencyViewController) -> CurrencyPresenterImpl {
-        return view.presenter as! CurrencyPresenterImpl
-    }
-
-    private func getFetcherMock(from presenter: CurrencyPresenterImpl) -> CurrencyFetcherMock {
-        return presenter.fetcher as! CurrencyFetcherMock
-    }
-
-    private func getDataSource(from presenter: CurrencyPresenterImpl) -> CurrencyDataSourceImpl {
-        return presenter.dataSource as! CurrencyDataSourceImpl
-    }
-
-    private func createMockedViewController() -> CurrencyViewControllerMock {
-        CurrencyAssembler(view: view,
-                          resolver: CurrencyResolverMock(factory: DependenciesStorage.shared, config: currencyConfig),
-                          config: currencyConfig).assemble()
-
-        let viewMock = CurrencyViewControllerMock(currencyViewController: view)
-        let presenter = getPresenter(from: view)
-        presenter.view = viewMock
-
-        return viewMock
+    private func assembleModule(using resolver: CurrencyResolver) {
+        CurrencyAssembler(view: viewMock,
+                          resolver: resolver,
+                          config: config).assemble()
+        XCTAssert(viewMock.reusableIdentifier == "CurrencyCellIdentifier", "Invalid reuse identifier")
+        XCTAssertNotNil(viewMock.presenter, "Presenter is nil")
+        XCTAssertNotNil(viewMock.dataSource, "Data source is nil")
+        XCTAssertNotNil(viewMock.amountFormatter, "Amount formatter is nil")
     }
 
 }

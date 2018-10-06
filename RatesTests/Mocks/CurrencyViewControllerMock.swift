@@ -10,32 +10,20 @@ import Changeset
 import UIKit
 @testable import Rates
 
-final class CurrencyViewControllerMock {
+final class CurrencyViewControllerMock: CurrencyViewController {
 
-    var updatedChangeset: Changeset<[Currency]>?
+    // MARK: - Properties
+
+    var changeset: Changeset<[Currency]>?
     var alertError: Error?
 
-    init(currencyViewController: CurrencyViewController) {
-        self.currencyViewController = currencyViewController
+    // MARK: - CurrencyListView
+
+    override func updateTable(with changeset: Changeset<[Currency]>) {
+        self.changeset = changeset
     }
 
-    func viewDidLoad() {
-        currencyViewController.viewDidLoad()
-    }
-
-    private let currencyViewController: CurrencyViewController
-
-}
-
-// MARK: - CurrencyListView
-
-extension CurrencyViewControllerMock: CurrencyListView {
-
-    func updateTable(with changeset: Changeset<[Currency]>) {
-        updatedChangeset = changeset
-    }
-
-    func alert(error: Error) {
+    override func alert(error: Error) {
         alertError = error
     }
 

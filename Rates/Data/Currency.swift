@@ -48,7 +48,7 @@ extension Currency: Equatable {
 extension Currency {
 
     var debugDescription: String {
-        return "<\(type(of: self))>: ID =\(id)), rate = \(rate), amount = \(amount)"
+        return "<\(type(of: self))>: id =\(id)), rate = \(rate), amount = \(amount)"
     }
 
 }
