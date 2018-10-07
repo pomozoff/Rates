@@ -31,9 +31,7 @@ class CurrencyResolver: Resolver {
             return factory.resolveObject { return CurrencyDataSourceImpl(currencyData: config.currencyData) } as! T
         } else if T.self == QueryBuilder?.self {
             return factory.resolveObject { return QueryBuilderImpl(baseUrl: config.baseUrl) } as! T
-        } else if T.self == CurrencyFetcher?.self {
-            return factory.resolveObject { return CurrencyFetcherImpl(session: config.session) } as! T
-        } else if T.self == CurrencyFetcherImpl.self {
+        } else if T.self == CurrencyFetcher?.self || T.self == CurrencyFetcherImpl.self {
             return factory.resolveObject { return CurrencyFetcherImpl(session: config.session) } as! T
         } else if T.self == QueueRunner?.self {
             return factory.resolveObject { return QueueRunnerImpl() } as! T

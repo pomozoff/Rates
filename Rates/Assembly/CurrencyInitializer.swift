@@ -31,13 +31,12 @@ final class CurrencyInitializer: NSObject {
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)
 
-        let config = CurrencyConfig(reusableIdentifier: "CurrencyCellIdentifier",
-                                    fetchPeriod: 1,
-                                    baseUrl: URL(string: "https://revolut.duckdns.org/")!,
-                                    currencyData: Currency.data,
-                                    amountFormatter: amountFormatter,
-                                    session: session)
-        return config
+        return CurrencyConfig(reusableIdentifier: "CurrencyCellIdentifier",
+                              fetchPeriod: 1,
+                              baseUrl: URL(string: "https://revolut.duckdns.org/")!,
+                              currencyData: Currency.data,
+                              amountFormatter: amountFormatter,
+                              session: session)
     }()
 
     private lazy var resolver = CurrencyResolver(factory: DependenciesStorage.shared, config: config)

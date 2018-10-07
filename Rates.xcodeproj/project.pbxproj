@@ -13,7 +13,6 @@
 		E80BCC6E21603C02005A2D32 /* Changeset.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E80BCC6D21603C02005A2D32 /* Changeset.framework */; };
 		E8209A20215A15B500C99660 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8209A1E215A15B500C99660 /* ObjectMapper.framework */; };
 		E8209A21215A15B500C99660 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8209A1F215A15B500C99660 /* PromiseKit.framework */; };
-		E8436BD22160FF12003F1E45 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436BD12160FF12003F1E45 /* URLSessionProtocol.swift */; };
 		E8436BD42161022A003F1E45 /* Changeset.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E80BCC6D21603C02005A2D32 /* Changeset.framework */; };
 		E8436BD52161022A003F1E45 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8209A1E215A15B500C99660 /* ObjectMapper.framework */; };
 		E8436BD62161022A003F1E45 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8209A1F215A15B500C99660 /* PromiseKit.framework */; };
@@ -27,13 +26,14 @@
 		E8436BF521611B21003F1E45 /* CurrencyFetcherMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436BF421611B21003F1E45 /* CurrencyFetcherMock.swift */; };
 		E8436BF821611BD9003F1E45 /* TestData.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8436BF721611BD9003F1E45 /* TestData.xcassets */; };
 		E8436BFA21611CC0003F1E45 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436BF921611CC0003F1E45 /* NetworkError.swift */; };
-		E8436BFE2161554B003F1E45 /* RandomizeCurrencyFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436BFD2161554B003F1E45 /* RandomizeCurrencyFetcher.swift */; };
 		E8436C0421615C98003F1E45 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436C0321615C98003F1E45 /* Resolver.swift */; };
 		E8436C0621615CAD003F1E45 /* CurrencyResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436C0521615CAD003F1E45 /* CurrencyResolver.swift */; };
 		E8436C0821615ED2003F1E45 /* CurrencyResolverMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436C0721615ED2003F1E45 /* CurrencyResolverMock.swift */; };
 		E8436C0A2161F404003F1E45 /* CurrencyViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436C092161F404003F1E45 /* CurrencyViewControllerMock.swift */; };
 		E8436C0C2161FA15003F1E45 /* QueueRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436C0B2161FA15003F1E45 /* QueueRunner.swift */; };
 		E8436C0E2161FB12003F1E45 /* QueueRunnerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8436C0D2161FB12003F1E45 /* QueueRunnerMock.swift */; };
+		E8A497C1216A6E3A009EF49A /* ViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A497C0216A6E3A009EF49A /* ViewTests.swift */; };
+		E8A497C3216A6E9B009EF49A /* AssembleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A497C2216A6E9B009EF49A /* AssembleTests.swift */; };
 		E8BEA1382159FADD00208BD3 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BEA1372159FADD00208BD3 /* Result.swift */; };
 		E8BEA1412159FC4300208BD3 /* CurrencyPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BEA1402159FC4300208BD3 /* CurrencyPresenter.swift */; };
 		E8BEA143215A081500208BD3 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BEA142215A081500208BD3 /* Error.swift */; };
@@ -69,7 +69,6 @@
 		E80BCC6D21603C02005A2D32 /* Changeset.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Changeset.framework; path = Carthage/Build/iOS/Changeset.framework; sourceTree = SOURCE_ROOT; };
 		E8209A1E215A15B500C99660 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = SOURCE_ROOT; };
 		E8209A1F215A15B500C99660 /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = SOURCE_ROOT; };
-		E8436BD12160FF12003F1E45 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
 		E8436BE421610741003F1E45 /* CurrencyAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyAssembler.swift; sourceTree = "<group>"; };
 		E8436BE6216109D9003F1E45 /* Assembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembler.swift; sourceTree = "<group>"; };
 		E8436BE821610BD9003F1E45 /* DependenciesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependenciesFactory.swift; sourceTree = "<group>"; };
@@ -79,13 +78,14 @@
 		E8436BF421611B21003F1E45 /* CurrencyFetcherMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFetcherMock.swift; sourceTree = "<group>"; };
 		E8436BF721611BD9003F1E45 /* TestData.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TestData.xcassets; sourceTree = "<group>"; };
 		E8436BF921611CC0003F1E45 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
-		E8436BFD2161554B003F1E45 /* RandomizeCurrencyFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeCurrencyFetcher.swift; sourceTree = "<group>"; };
 		E8436C0321615C98003F1E45 /* Resolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
 		E8436C0521615CAD003F1E45 /* CurrencyResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyResolver.swift; sourceTree = "<group>"; };
 		E8436C0721615ED2003F1E45 /* CurrencyResolverMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyResolverMock.swift; sourceTree = "<group>"; };
 		E8436C092161F404003F1E45 /* CurrencyViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyViewControllerMock.swift; sourceTree = "<group>"; };
 		E8436C0B2161FA15003F1E45 /* QueueRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueRunner.swift; sourceTree = "<group>"; };
 		E8436C0D2161FB12003F1E45 /* QueueRunnerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueRunnerMock.swift; sourceTree = "<group>"; };
+		E8A497C0216A6E3A009EF49A /* ViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTests.swift; sourceTree = "<group>"; };
+		E8A497C2216A6E9B009EF49A /* AssembleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssembleTests.swift; sourceTree = "<group>"; };
 		E8BEA1372159FADD00208BD3 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		E8BEA1402159FC4300208BD3 /* CurrencyPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPresenter.swift; sourceTree = "<group>"; };
 		E8BEA142215A081500208BD3 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -209,7 +209,6 @@
 			children = (
 				E8F4A9CF2159746C008F807B /* CurrencyDataSource.swift */,
 				E8F4A9D521597944008F807B /* CurrencyFetcher.swift */,
-				E8436BFD2161554B003F1E45 /* RandomizeCurrencyFetcher.swift */,
 				E8BEA146215A0E9000208BD3 /* QueryBuilder.swift */,
 			);
 			path = Services;
@@ -297,8 +296,9 @@
 				E8436BF321611B11003F1E45 /* Mocks */,
 				E8436BF621611BB9003F1E45 /* Resources */,
 				E8F4A9C42159707C008F807B /* Info.plist */,
+				E8A497C2216A6E9B009EF49A /* AssembleTests.swift */,
 				E8F4A9C22159707C008F807B /* RatesTests.swift */,
-				E8436BD12160FF12003F1E45 /* URLSessionProtocol.swift */,
+				E8A497C0216A6E3A009EF49A /* ViewTests.swift */,
 			);
 			path = RatesTests;
 			sourceTree = "<group>";
@@ -458,7 +458,6 @@
 				E8BEA143215A081500208BD3 /* Error.swift in Sources */,
 				E8436C0621615CAD003F1E45 /* CurrencyResolver.swift in Sources */,
 				E8F4A9AE2159707A008F807B /* AppDelegate.swift in Sources */,
-				E8436BFE2161554B003F1E45 /* RandomizeCurrencyFetcher.swift in Sources */,
 				E8436BFA21611CC0003F1E45 /* NetworkError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,9 +467,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8436C0821615ED2003F1E45 /* CurrencyResolverMock.swift in Sources */,
-				E8436BD22160FF12003F1E45 /* URLSessionProtocol.swift in Sources */,
 				E8436BF521611B21003F1E45 /* CurrencyFetcherMock.swift in Sources */,
+				E8A497C1216A6E3A009EF49A /* ViewTests.swift in Sources */,
 				E8436C0E2161FB12003F1E45 /* QueueRunnerMock.swift in Sources */,
+				E8A497C3216A6E9B009EF49A /* AssembleTests.swift in Sources */,
 				E8436C0A2161F404003F1E45 /* CurrencyViewControllerMock.swift in Sources */,
 				E8F4A9C32159707C008F807B /* RatesTests.swift in Sources */,
 			);

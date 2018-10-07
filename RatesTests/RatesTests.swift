@@ -11,29 +11,25 @@ import XCTest
 
 class RatesTests: XCTestCase {
 
+    // MARK: - XCTestCase
+
     override func setUp() {
         viewMock = CurrencyViewControllerMock()
         XCTAssertNotNil(viewMock, "View mock is nil")
 
         DependenciesStorage.shared.flush()
+        CurrencyAssembler(view: viewMock, resolver: resolverMock, config: RatesTests.testCurrencyConfig).assemble()
+
+        viewMock.viewDidLoad()
     }
 
     override func tearDown() {
         viewMock = nil
     }
 
-    func testAssembly() {
-        let resolver = CurrencyResolver(factory: DependenciesStorage.shared, config: config)
-        XCTAssertNotNil(resolver, "Currency resolver is nil")
-
-        assembleModule(using: resolver)
-    }
+    // MARK: - Tests
 
     func testLoadInitialRates() {
-        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
-        assembleModule(using: resolver)
-
-        viewMock.viewDidLoad()
         XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
 
         let expectedNumberOfLoadedRows = 5
@@ -42,13 +38,8 @@ class RatesTests: XCTestCase {
     }
 
     func testUpdateInitialRates() {
-        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
-        assembleModule(using: resolver)
-
-        viewMock.viewDidLoad()
-
-        resolver.assetName = "CurrencyRatesUpdateBaseEUR"
-        assembleModule(using: resolver)
+        resolverMock.assetName = "CurrencyRatesUpdateBaseEUR"
+        CurrencyAssembler(view: viewMock, resolver: resolverMock, config: RatesTests.testCurrencyConfig).assemble()
 
         viewMock.viewDidLoad()
         XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
@@ -58,12 +49,6 @@ class RatesTests: XCTestCase {
     }
 
     func testSetNewBaseCurrency() {
-        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
-        assembleModule(using: resolver)
-
-        viewMock.viewDidLoad()
-        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-
         let rowFrom = 3
         viewMock.presenter.moveCurrencyToTop(fromRow: rowFrom, completion: {})
 
@@ -81,12 +66,6 @@ class RatesTests: XCTestCase {
     }
 
     func testUpdateBaseCurrencyAmount() {
-        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
-        assembleModule(using: resolver)
-
-        viewMock.viewDidLoad()
-        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-
         let newBaseAmount: Decimal = 10.0
         viewMock.presenter.updateAmountOfBaseCurrency(with: newBaseAmount)
 
@@ -100,12 +79,6 @@ class RatesTests: XCTestCase {
     }
 
     func testSetNewBaseCurrencyAndUpdateItsAmount() {
-        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
-        assembleModule(using: resolver)
-
-        viewMock.viewDidLoad()
-        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
-
         var newBaseAmount: Decimal = 10.0
         viewMock.presenter.updateAmountOfBaseCurrency(with: newBaseAmount)
 
@@ -128,7 +101,17 @@ class RatesTests: XCTestCase {
 
     private var viewMock: CurrencyViewControllerMock!
 
-    private var config: CurrencyConfig = {
+    private lazy var resolverMock = CurrencyResolverMock(factory: DependenciesStorage.shared,
+                                                         config: RatesTests.testCurrencyConfig,
+                                                         assetName: "CurrencyRatesInitBaseEUR")
+
+}
+
+// MARK: - Public
+
+extension RatesTests {
+
+    static var testCurrencyConfig: CurrencyConfig {
         let amountFormatter = NumberFormatter()
         amountFormatter.numberStyle = .decimal
 
@@ -141,33 +124,6 @@ class RatesTests: XCTestCase {
                               currencyData: Currency.data,
                               amountFormatter: amountFormatter,
                               session: session)
-    }()
-
-}
-
-// MARK: - Private
-
-private extension RatesTests {
-
-    private func assembleModule(using resolver: CurrencyResolver) {
-        CurrencyAssembler(view: viewMock,
-                          resolver: resolver,
-                          config: config).assemble()
-        checkViewIsReady(viewMock)
-    }
-
-    private func checkViewIsReady(_ view: CurrencyViewController) {
-        XCTAssert(view.reusableIdentifier == "CurrencyCellIdentifier", "Invalid reuse identifier")
-        XCTAssertNotNil(view.presenter, "Presenter is nil")
-        XCTAssertNotNil(view.dataSource, "Data source is nil")
-        XCTAssertNotNil(view.amountFormatter, "Amount formatter is nil")
-    }
-
-    private func createResolverMock(with asset: String) -> CurrencyResolverMock {
-        let resolver = CurrencyResolverMock(factory: DependenciesStorage.shared, config: config, assetName: "CurrencyRatesInitBaseEUR")
-        XCTAssertNotNil(resolver, "Currency resolver mock is nil")
-
-        return resolver
     }
 
 }
