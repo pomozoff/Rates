@@ -80,6 +80,50 @@ class RatesTests: XCTestCase {
         }
     }
 
+    func testUpdateBaseCurrencyAmount() {
+        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
+        assembleModule(using: resolver)
+
+        viewMock.viewDidLoad()
+        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
+
+        let newBaseAmount: Decimal = 10.0
+        viewMock.presenter.updateAmountOfBaseCurrency(with: newBaseAmount)
+
+        let expectedNumberOfUpdatedRows = 4
+        let edits = viewMock.changeset!.edits
+        XCTAssert(edits.count == expectedNumberOfUpdatedRows, "Invalid number of loaded rows")
+
+        edits.forEach {
+            XCTAssert($0.value.amount == $0.value.rate * newBaseAmount, "Invalid amount of \($0.value.id)")
+        }
+    }
+
+    func testSetNewBaseCurrencyAndUpdateItsAmount() {
+        let resolver = createResolverMock(with: "CurrencyRatesInitBaseEUR")
+        assembleModule(using: resolver)
+
+        viewMock.viewDidLoad()
+        XCTAssertNil(viewMock.alertError, "Error fetching changes: \(viewMock.alertError!)")
+
+        var newBaseAmount: Decimal = 10.0
+        viewMock.presenter.updateAmountOfBaseCurrency(with: newBaseAmount)
+
+        let rowFrom = 3
+        viewMock.presenter.moveCurrencyToTop(fromRow: rowFrom, completion: {})
+
+        newBaseAmount = 20.0
+        viewMock.presenter.updateAmountOfBaseCurrency(with: newBaseAmount)
+
+        let expectedNumberOfUpdatedRows = 4
+        let edits = viewMock.changeset!.edits
+        XCTAssert(edits.count == expectedNumberOfUpdatedRows, "Invalid number of loaded rows")
+
+        edits.forEach {
+            XCTAssert($0.value.amount == $0.value.rate * newBaseAmount, "Invalid amount of \($0.value.id)")
+        }
+    }
+
     // MARK: - Private
 
     private var viewMock: CurrencyViewControllerMock!
@@ -109,10 +153,14 @@ private extension RatesTests {
         CurrencyAssembler(view: viewMock,
                           resolver: resolver,
                           config: config).assemble()
-        XCTAssert(viewMock.reusableIdentifier == "CurrencyCellIdentifier", "Invalid reuse identifier")
-        XCTAssertNotNil(viewMock.presenter, "Presenter is nil")
-        XCTAssertNotNil(viewMock.dataSource, "Data source is nil")
-        XCTAssertNotNil(viewMock.amountFormatter, "Amount formatter is nil")
+        checkViewIsReady(viewMock)
+    }
+
+    private func checkViewIsReady(_ view: CurrencyViewController) {
+        XCTAssert(view.reusableIdentifier == "CurrencyCellIdentifier", "Invalid reuse identifier")
+        XCTAssertNotNil(view.presenter, "Presenter is nil")
+        XCTAssertNotNil(view.dataSource, "Data source is nil")
+        XCTAssertNotNil(view.amountFormatter, "Amount formatter is nil")
     }
 
     private func createResolverMock(with asset: String) -> CurrencyResolverMock {

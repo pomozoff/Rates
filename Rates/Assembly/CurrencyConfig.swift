@@ -10,6 +10,8 @@ import Foundation
 
 struct CurrencyConfig {
 
+    // MARK: - Properties
+
     let reusableIdentifier: String
     let fetchPeriod: Int?
     let baseUrl: URL

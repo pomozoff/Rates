@@ -18,31 +18,29 @@ final class CurrencyInitializer: NSObject {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        configureApplication()
+
+        assembler.assemble()
     }
 
-}
+    // MARK: - Private
 
-// MARK: - Private
-
-private extension CurrencyInitializer {
-
-    private func configureApplication() {
+    private lazy var config: CurrencyConfig = {
         let amountFormatter = NumberFormatter()
         amountFormatter.numberStyle = .decimal
 
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)
 
-        let currencyConfig = CurrencyConfig(reusableIdentifier: "CurrencyCellIdentifier",
-                                            fetchPeriod: 1,
-                                            baseUrl: URL(string: "https://revolut.duckdns.org/")!,
-                                            currencyData: Currency.data,
-                                            amountFormatter: amountFormatter,
-                                            session: session)
-        CurrencyAssembler(view: currencyViewController,
-                          resolver: CurrencyResolver(factory: DependenciesStorage.shared, config: currencyConfig),
-                          config: currencyConfig).assemble()
-    }
+        let config = CurrencyConfig(reusableIdentifier: "CurrencyCellIdentifier",
+                                    fetchPeriod: 1,
+                                    baseUrl: URL(string: "https://revolut.duckdns.org/")!,
+                                    currencyData: Currency.data,
+                                    amountFormatter: amountFormatter,
+                                    session: session)
+        return config
+    }()
+
+    private lazy var resolver = CurrencyResolver(factory: DependenciesStorage.shared, config: config)
+    private lazy var assembler = CurrencyAssembler(view: currencyViewController, resolver: resolver, config: config)
 
 }

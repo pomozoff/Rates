@@ -41,7 +41,7 @@ final class CurrencyDataSourceImpl {
     // MARK: - Private
 
     private let currencyComparator: (Currency, Currency) -> Bool = {
-        $0.id == $1.id && $0.rate == $1.rate
+        $0.id == $1.id && $0.rate == $1.rate && $0.amount == $1.amount
     }
 
     private let currencyData: [String : (String, String)]
@@ -100,14 +100,20 @@ extension CurrencyDataSourceImpl: CurrencyList {
 
     func updateCurrencyList(with amount: Decimal) -> Changeset<[Currency]> {
         baseCurrency.amount = amount
+
+        let baseIndex = currencyList.index(of: baseCurrency)!
+        assert(baseIndex == 0, "Invalid index of base currency")
+        currencyList[baseIndex] = baseCurrency
+
         let newCurrencyList = currencyList.compactMap { (currency) -> Currency? in
             guard currency.id != baseCurrency.id else { return currency }
             return Currency(id: currency.id,
                             name: currency.name,
                             rate: currency.rate,
-                            amount: currency.rate * baseCurrency.amount,
+                            amount: currency.rate * amount,
                             country: currency.country)
         }
+        
         return updateCurrencyList(with: newCurrencyList)
     }
 
